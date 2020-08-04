@@ -152,7 +152,7 @@ _v1.6.0_
 <!-- ^ please keep old anchor to not break zillion outer links -->
 ### 差评/缺点
 
-> 变量必须在使用前定义
+> 变量不必在使用前定义
 
 有效Less代码:
 
