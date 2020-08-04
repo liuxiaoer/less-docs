@@ -183,7 +183,6 @@ _v1.6.0_
 }
 ```
 
-When defining a variable twice, the last definition of the variable is used, searching from the current scope upwards. This is similar to css itself where the last property inside a definition is used to determine the value.
 当变量重复被定义，会使用从当前域向上查找到的最后一次定义的值。与css自有特性一样，使用定义中的最后一个属性值
 
 例如:
