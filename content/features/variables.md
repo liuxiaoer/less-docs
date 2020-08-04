@@ -150,7 +150,7 @@ _v1.6.0_
 
 <span class="anchor-target" id="variables-feature-lazy-loading"></span>
 <!-- ^ please keep old anchor to not break zillion outer links -->
-### 差评/缺点
+### 延时执行
 
 > 变量不必在使用前定义
 
