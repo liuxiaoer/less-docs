@@ -1,12 +1,11 @@
 ---
-title: Variables
+标题: 变量
 ---
 
-> Control commonly used values in a single location.
+> 控制单个位置中常用的值。
 
-### Overview
-
-It's not uncommon to see the same value repeated dozens _if not hundreds of times_ across your stylesheets:
+### Overview(概述)
+同一个值在样式表中重复几十次甚至几百次并不少见
 
 ```css
 a,
@@ -19,7 +18,7 @@ a,
 }
 ```
 
-Variables make your code easier to maintain by giving you a way to control those values from a single location:
+变量提供一种从单个位置控制这些常量方法，使你的代码更容易维护:
 
 ```less
 // Variables
@@ -40,12 +39,12 @@ a:hover {
 }
 ```
 
-### Variable Interpolation
+### Variable Interpolation(可变插值)
 
-The examples above focused on using variables to control _values in CSS rules_, but they can also be used in other places as well, such as selector names, property names, URLs and `@import` statements.
+上面的例子使用变量控制css规则中的值，但是他们也可以在其它位置很好的使用，例如选择器名、属性名、URL和`@import`声明。
 
 
-#### Selectors
+#### 选择器
 
 _v1.4.0_
 
@@ -60,7 +59,7 @@ _v1.4.0_
   margin: 0 auto;
 }
 ```
-Compiles to:
+编译成:
 
 ```css
 .banner {
@@ -83,25 +82,25 @@ body {
 }
 ```
 
-#### Import Statements
+#### Import 声明
 
 _v1.4.0_
 
-Syntax: `@import "@{themes}/tidal-wave.less";`
+语法: `@import "@{themes}/tidal-wave.less";`
 
-Note that before v2.0.0, only variables which have been declared in the root or current scope were considered and that only the current file and calling files were considered when looking for a variable.
+注意：在v2.0.0之前，只有考虑在根或者当前域声明的变量，并且在查找变量时，只考虑当前文件和被调用的文件
 
-Example:
+示例:
 
 ```less
-// Variables
+// 变量
 @themes: "../../src/themes";
 
-// Usage
+// 使用
 @import "@{themes}/tidal-wave.less";
 ```
 
-#### Properties
+#### 属性名
 
 _v1.6.0_
 
@@ -114,7 +113,7 @@ _v1.6.0_
 }
 ```
 
-Compiles to:
+编译成:
 
 ```css
 .widget {
@@ -123,9 +122,10 @@ Compiles to:
 }
 ```
 
-### Variable Variables
+### 变量的变量
 
-In Less, you can define a variable's name using another variable.
+在Less中你可以使用变量去定义另外一个变量的名字
+
 
 ```less
 @primary:  green;
@@ -140,7 +140,7 @@ In Less, you can define a variable's name using another variable.
 }
 ```
 
-Which compiles to:
+编译成:
 
 ```less
 .section .element {
@@ -150,11 +150,11 @@ Which compiles to:
 
 <span class="anchor-target" id="variables-feature-lazy-loading"></span>
 <!-- ^ please keep old anchor to not break zillion outer links -->
-### Lazy Evaluation
+### 差评/缺点
 
-> Variables do not have to be declared before being used.
+> 变量必须在使用前定义
 
-Valid Less snippet:
+有效Less代码:
 
 ```less
 .lazy-eval {
@@ -164,7 +164,7 @@ Valid Less snippet:
 @var: @a;
 @a: 9%;
 ```
-this is valid Less too:
+有效Less代码:
 
 ```less
 .lazy-eval {
@@ -175,7 +175,7 @@ this is valid Less too:
 @var: @a;
 @a: 100%;
 ```
-both compile into:
+上面两种写法都会编译成:
 
 ```css
 .lazy-eval {
@@ -184,8 +184,9 @@ both compile into:
 ```
 
 When defining a variable twice, the last definition of the variable is used, searching from the current scope upwards. This is similar to css itself where the last property inside a definition is used to determine the value.
+当变量重复被定义，会使用从当前域向上查找到的最后一次定义的值。与css自有特性一样，使用定义中的最后一个属性值
 
-For instance:
+例如:
 
 ```less
 @var: 0;
@@ -199,7 +200,7 @@ For instance:
   one: @var;
 }
 ```
-Compiles to:
+编译成:
 
 ```css
 .class {
@@ -210,7 +211,8 @@ Compiles to:
 }
 ```
 
-Essentially, each scope has a "final" value, similar to properties in the browser, like this example using custom properties:
+实际上每个域都有一个final值，与类似于浏览器中的属性。
+
 ```css
 .header {
   --color: white;
@@ -218,15 +220,15 @@ Essentially, each scope has a "final" value, similar to properties in the browse
   --color: black;
 }
 ```
-This means that, unlike other CSS pre-processing languages, Less variables behave very much like CSS's.
+
+也就是说，Less变量的行为很像CSS，不像其它预处理的CSS。
 
 
-### Properties as Variables **(NEW!)**
+### 属性做为变量 **(新!)**
 
 _v3.0.0_
 
-You can easily treat properties like variables using the `$prop` syntax. Sometimes this can
-make your code a little lighter.
+你可以很容易的使用`$prop`语法像变量一样来使用属性。有时这种写法会你写代码更轻松一点。
 
 ```less
 .widget {
@@ -235,7 +237,7 @@ make your code a little lighter.
 }
 ```
 
-Compiles to:
+编译成:
 
 ```css
 .widget {
@@ -244,8 +246,7 @@ Compiles to:
 }
 ```
 
-Note that, like variables, Less will choose the last property within the current/parent scope
-as being the "final" value.
+注意：像变量一样，Less会选择在当前/父域中找到的最后一次属值做为最终值。
 
 ```less
 .block {
@@ -257,7 +258,7 @@ as being the "final" value.
 } 
 ```
 
-Compiles to:
+编译成:
 ```css
 .block {
   color: red; 
@@ -268,11 +269,11 @@ Compiles to:
 }
 ```
 
-### Default Variables
+### 默认变量
 
-We sometimes get requests for default variables - an ability to set a variable only if it is not already set. This feature is not required because you can easily override a variable by putting the definition afterwards.
+我们时常有默认变量的请求-在没有设置值的情况下。默认亦是不是必需的，因为很容易事后定义变量重写一个变量。
 
-For instance:
+例如:
 
 ```less
 // library
@@ -285,3 +286,4 @@ For instance:
 ```
 
 This works fine because of [Lazy Loading](#variables-feature-lazy-loading) - `@base-color` is overridden and `@dark-color` is a dark red.
+这样会正常运行，因为[Lazy Loading](#variables-feature-lazy-loading)- `@base-color` 被重写，并且 `@dark-color` 被重写成darken(red).
