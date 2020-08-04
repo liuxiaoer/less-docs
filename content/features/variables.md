@@ -285,5 +285,4 @@ _v3.0.0_
 @base-color: red;
 ```
 
-This works fine because of [Lazy Loading](#variables-feature-lazy-loading) - `@base-color` is overridden and `@dark-color` is a dark red.
 这样会正常运行，因为[Lazy Loading](#variables-feature-lazy-loading)- `@base-color` 被重写，并且 `@dark-color` 被重写成darken(red).
