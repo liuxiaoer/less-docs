@@ -1,8 +1,8 @@
-> How to pass arguments to mixins
+> 如何将参数传递给mixins
 
-Mixins can also take arguments, which are variables passed to the block of selectors when it is mixed in.
+Mixins也可以带有参数，参数是在混合时传递给选择器块的变量。
 
-For example:
+例如:
 
 ```less
 .border-radius(@radius) {
@@ -12,7 +12,7 @@ For example:
 }
 ```
 
-And here's how we can mix it into various rulesets:
+这里是我们如何将它混合到各种规则集中：
 
 ```less
 #header {
@@ -23,7 +23,7 @@ And here's how we can mix it into various rulesets:
 }
 ```
 
-Parametric mixins can also have default values for their parameters:
+参数化的mixins的参数也可以有默认值:
 
 ```less
 .border-radius(@radius: 5px) {
@@ -33,7 +33,7 @@ Parametric mixins can also have default values for their parameters:
 }
 ```
 
-We can invoke it like this now:
+我们可以直接调用它:
 
 ```less
 #header {
@@ -41,9 +41,9 @@ We can invoke it like this now:
 }
 ```
 
-And it will include a 5px border-radius.
+它包含了一个5px的圆角。
 
-You can also use parametric mixins which don't take parameters. This is useful if you want to hide the ruleset from the CSS output, but want to include its properties in other rulesets:
+你也可以使用不带参数的参数化mixins。如果你想在CSS中隐藏规则集，但又想在其它规则集中使用它的属性，这是很有用的
 
 ```less
 .wrap() {
@@ -56,7 +56,7 @@ You can also use parametric mixins which don't take parameters. This is useful i
 pre { .wrap() }
 ```
 
-Which would output:
+输出:
 
 ```css
 pre {
@@ -67,17 +67,17 @@ pre {
 }
 ```
 
-#### Mixins with Multiple Parameters
-Parameters are either *semicolon* or *comma* separated. It is recommended to use *semicolon*. The symbol comma has double meaning: it can be interpreted either as a mixin parameters separator or css list separator.
+#### 多个参数的Mixins
+多个参数用分号或逗号分隔。推荐使用分号。逗号有两层意思：它可以被理解为mixin的参数分隔符和css列表的分隔符。
 
-Using comma as mixin separator makes it impossible to create comma separated lists as an argument. On the other hand, if the compiler sees at least one semicolon inside mixin call or declaration, it assumes that arguments are separated by semicolons and all commas belong to css lists:
+使用逗号做为mixin的参数分隔符无法创建逗号分隔的列表做为参数。另一方面，如果编译器在mixin调用或声明中看到至少一个分号，它就认为参数是分号分隔的，所有逗号都是css列表的:
 
-* two arguments and each contains comma separated list: `.name(1, 2, 3; something, else)`,
-* three arguments and each contains one number: `.name(1, 2, 3)`,
-* use dummy semicolon to create mixin call with one argument containing comma separated css list: `.name(1, 2, 3;)`,
-* comma separated default value: `.name(@param1: red, blue;)`.
+* 两个参数并且都包含逗号分隔的列表：`.name(1, 2, 3; something, else)`,
+* 三个参数并且都包含一个数字：`.name(1, 2, 3)`,
+* 使用伪分号创建mixin只一个包含逗号分割的css列表调用：`.name(1, 2, 3;)`,
+* 逗号分割默认值： `.name(@param1: red, blue;)`.
 
-It is legal to define multiple mixins with the same name and number of parameters. Less will use properties of all that can apply. If you used the mixin with one parameter e.g. `.mixin(green);`, then properties of all mixins with exactly one mandatory parameter will be used:
+定义多个相同参数名和参数个数的mixins是合法的。Less会使用所有它可以会用的参数。如果你使用一个参数的mixin，例如`.mixin(green);`，然后将使用只包含一个强制参数的所有mixin的属性。
 
 ```less
 .mixin(@color) {
@@ -97,7 +97,7 @@ It is legal to define multiple mixins with the same name and number of parameter
 }
 ```
 
-compiles into:
+编译成:
 
 ```css
 .some .selector div {
@@ -107,9 +107,9 @@ compiles into:
 }
 ```
 
-#### Named Parameters
+#### 命名的参数
 
-A mixin reference can supply parameters values by their names instead of just positions. Any parameter can be referenced by its name and they do not have to be in any special order:
+mixin引用可以通过参数的名称而不仅仅是位置为提供参数值。所有参数都能被他们自己的俩字所引用，而不需要特定的顺序：
 
 ```less
 .mixin(@color: black; @margin: 10px; @padding: 20px) {
@@ -124,7 +124,7 @@ A mixin reference can supply parameters values by their names instead of just po
   .mixin(#efca44; @padding: 40px);
 }
 ```
-compiles into:
+编译成:
 
 ```css
 .class1 {
@@ -139,9 +139,9 @@ compiles into:
 }
 ```
 
-#### The `@arguments` Variable
+#### `@arguments`变量
 
-`@arguments` has a special meaning inside mixins, it contains all the arguments passed, when the mixin was called. This is useful if you don't want to deal with individual parameters:
+在mixins中`@arguments`有个特殊的含意。当mixin被调用时，它包含所有被传递的参数。如果你不想处理个别的参数这是很有用的。
 
 ```less
 .box-shadow(@x: 0; @y: 0; @blur: 1px; @color: #000) {
@@ -154,7 +154,7 @@ compiles into:
 }
 ```
 
-Which results in:
+结果:
 
 ```css
 .big-block {
@@ -164,9 +164,9 @@ Which results in:
 }
 ```
 
-#### Advanced Arguments and the `@rest` Variable
+#### 高级参数和变量`@rest`
 
-You can use `...` if you want your mixin to take a variable number of arguments. Using this after a variable name will assign those arguments to the variable.
+你可以使用`...`，如果你希望你的mixin可以接收可变参数个数。把它放在一个变量名字后面，这个变量将接收这些参数。
 
 ```less
 .mixin(...) {        // matches 0-N arguments
@@ -176,18 +176,18 @@ You can use `...` if you want your mixin to take a variable number of arguments.
 .mixin(@a; ...) {    // matches 1-N arguments
 ```
 
-Furthermore:
+此外:
 
 ```less
 .mixin(@a; @rest...) {
-   // @rest is bound to arguments after @a
-   // @arguments is bound to all arguments
+   // @rest接收@a后面的所有参数
+   // @arguments接收所有参数
 }
 ```
 
-## Pattern-matching
+## 模式匹配
 
-Sometimes, you may want to change the behavior of a mixin, based on the parameters you pass to it. Let's start with something basic:
+有时，你可能想基于传递的参数改变mixin的行为。
 
 ```less
 .mixin(@s; @color) { ... }
@@ -197,7 +197,7 @@ Sometimes, you may want to change the behavior of a mixin, based on the paramete
 }
 ```
 
-Now let's say we want `.mixin` to behave differently, based on the value of `@switch`, we could define `.mixin` as such:
+现在我们想让`.mixin`根据`@switch`的值具有不同的处理方式。我们定义如下`.mixin`:
 
 ```less
 .mixin(dark; @color) {
@@ -211,7 +211,7 @@ Now let's say we want `.mixin` to behave differently, based on the value of `@sw
 }
 ```
 
-Now, if we run:
+我们来运行一下:
 
 ```less
 @switch: light;
@@ -221,7 +221,7 @@ Now, if we run:
 }
 ```
 
-We will get the following CSS:
+结果:
 
 ```css
 .class {
@@ -230,19 +230,17 @@ We will get the following CSS:
 }
 ```
 
-Where the color passed to `.mixin` was lightened. If the value of `@switch` was `dark`,
-the result would be a darker color.
+传给`.mixin`的颜色是亮色。如果`@switch`的值是`dark`，结果会是一个深的颜色。
 
-Here's what happened:
+匹配过程:
 
-* The first mixin definition didn't match because it expected `dark` as the first argument.
-* The second mixin definition matched, because it expected `light`.
-* The third mixin definition matched because it expected any value.
+* 第一个mixin定义未匹配，因为它的第一个参数是`dark`
+* 第二个mixin定义匹配，因为它的参数期望值是`light`
+* 第三个mixin定义匹配，因为它的参数期望值是任意值
 
-Only mixin definitions which matched were used. Variables match and bind to any value.
-Anything other than a variable matches only with a value equal to itself.
+所有匹配的mixin定义会被调用。变量匹配并且绑定到任意值。其它的值只会匹配与自己相等的值。
 
-We can also match on arity, here's an example:
+我们也可以在数量上匹配。示例如下：
 
 ```less
 .mixin(@a) {
@@ -253,5 +251,6 @@ We can also match on arity, here's an example:
 }
 ```
 
-Now if we call `.mixin` with a single argument, we will get the output of the first definition,
-but if we call it with *two* arguments, we will get the second definition, namely `@a` faded to `@b`.
+如果我们调用`.mixin`传递一个参数，将会调用第一个定义，
+如果我们调用`.mixin`传递两个参数，将会调用第二个定义。
+
