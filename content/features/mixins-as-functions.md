@@ -1,12 +1,12 @@
-> Selecting properties and variables from mixin calls
+> 在mixin调用中选择属性和变量
 
-#### Property / value accessors
+#### 属性/值访问器
 
-_Released [v3.5.0]({{ less.master.url }}CHANGELOG.md)_
+发布版本 [v3.5.0]({{ less.master.url }}CHANGELOG.md)_
 
-Starting in Less 3.5, you can use property/variable accessors to select a value from an evaluated mixin's rules. This can allow you to use mixins similar to functions.
+从Less3.5开始，你可以使用属性/值访问器从带变量的mixin规则集中来选择值。类似函数一样的使用mixin。
 
-Example:
+示例:
 
 ```less
 .average(@x, @y) {
@@ -14,12 +14,12 @@ Example:
 }
 
 div {
-  // call a mixin and look up its "@result" value
+  // 调用一个mixin并且查找"@result"值
   padding: .average(16px, 50px)[@result];
 }
 ```
 
-Results in:
+结果:
 
 ```css
 div {
@@ -27,9 +27,9 @@ div {
 }
 ```
 
-#### Overriding mixin values
+#### 重写mixin值
 
-If you have multiple matching mixins, all rules are evaluated and merged, and the last matching value with that identifier is returned. This is similar to the cascade in CSS, and it allows you to "override" mixin values.
+如果有多个匹配的mixin，所有的规则集被执行和合并，并使用最后一个匹配mixin的值。这类似CSS的级联，它允许你“重写”mixin的值。
 
 ```less
 // library.less
@@ -51,36 +51,36 @@ If you have multiple matching mixins, all rules are evaluated and merged, and th
   my-value: #library.mixin[prop];
 }
 ```
-Outputs:
+结果:
 ```css
 .box {
   my-value: bar;
 }
 ```
 
-#### Unnamed lookups
+#### 未命名查找
 
-If you don't specify a lookup value in `[@lookup]` and instead write `[]` after a mixin or ruleset call, _all_ values will cascade and the last declared value will be selected.
+如果没有指定查找值`[@lookup]`而是只写`[]`，所有的值都会级联并选择最后一个声明的值。
 
-Meaning: the averaging mixin from the above example could be written as:
+含义: 上面的平均值mixin示例写成：
 ```less
 .average(@x, @y) {
   @result: ((@x + @y) / 2);
 }
 
 div {
-  // call a mixin and look up its final value
+  // 调用并查找值
   padding: .average(16px, 50px)[];
 }
 ```
-The output is the same:
+同样输出:
 ```css
 div {
   padding: 33px;
 }
 ```
 
-The same cascading behavior is true for rulesets or variables aliased to mixin calls.
+mixin调用中规则集和变量别名有相同的级联行为。
 ```less
 @dr: {
   value: foo;
@@ -89,7 +89,7 @@ The same cascading behavior is true for rulesets or variables aliased to mixin c
   my-value: @dr[];
 }
 ```
-This outputs:
+输出:
 ```css
 .box {
   my-value: foo;
@@ -97,15 +97,15 @@ This outputs:
 ```
 
 
-#### Unlocking mixins & variables into caller scope
+#### 将mixin&变量解锁到调用域
 
-***DEPRECATED - Use Property / Value Accessors***
+***DEPRECATED - 使用属性/值访问器***
 
-Variables and mixins defined in a mixin are visible and can be used in caller's scope. There is only one exception: a variable is not copied if the caller contains a variable with the same name (that includes variables defined by another mixin call).  Only variables present in callers local scope are protected. Variables inherited from parent scopes are overridden.
+在调用域中mixin中定义的变量和mixin都是可见的。只有一个例外：如果调用者包含一个相同的变量名，这个变量不会被拷贝（包含被另一个mixin调用定义的变量）。只有调用者局部作用域中存在的变量才受保护。从父作用域中继承的变量将被重写。
 
-_Note: this behavior is deprecated, and in the future, variables and mixins will not be merged into the caller scope in this way._
+注意: 这个行为已弃用, 在将来, 这种方式将不会合并变量和mixins到调用者域中。
 
-Example:
+示例:
 
 ```less
 .mixin() {
@@ -120,7 +120,7 @@ Example:
 }
 
 ```
-Results in:
+结果:
 
 ```css
 .caller {
@@ -129,7 +129,8 @@ Results in:
 }
 ```
 
-Variables defined directly in callers scope cannot be overridden. However, variables defined in callers parent scope is not protected and will be overridden:
+在调用者域中直接定义的变量无法被重写。然而，调用者父作用域中定义的变量不受保护将会被重写。
+
 ````less
 .mixin() {
   @size: in-mixin;
@@ -141,31 +142,31 @@ Variables defined directly in callers scope cannot be overridden. However, varia
   .mixin();
 }
 
-@size: globaly-defined-value; // callers parent scope - no protection
+@size: globaly-defined-value; // 调用者的父作用域 - 不受保护
 ````
 
-Results in:
+结果:
 ````css
 .class {
   margin: in-mixin in-mixin;
 }
 ````
 
-Finally, mixin defined in mixin acts as return value too:
+最后，mixin中定义的mixin也可以作为返回值：
 ````less
-.unlock(@value) { // outer mixin
-  .doSomething() { // nested mixin
+.unlock(@value) { // 外层mixin
+  .doSomething() { // 嵌套mixin
     declaration: @value;
   }
 }
 
 #namespace {
-  .unlock(5); // unlock doSomething mixin
-  .doSomething(); //nested mixin was copied here and is usable
+  .unlock(5); // 解锁doSomething mixin
+  .doSomething(); //嵌套mixin拷贝到这并且可用
 }
 ````
 
-Results in:
+结果:
 ````css
 #namespace {
   declaration: 5;
