@@ -1,6 +1,8 @@
 > "mix-in" properties from existing styles
+从已存在的样式中组合属性
 
 You can mix-in class selectors and id selectors, e.g.
+你可以组合类选择器和id选择器。例如
 
 ```less
 .a, #b {
@@ -13,7 +15,7 @@ You can mix-in class selectors and id selectors, e.g.
   #b();
 }
 ```
-which results in:
+结果:
 ```css
 .a, #b {
   color: red;
@@ -26,16 +28,16 @@ which results in:
 }
 ```
 
-Currently and historically, the parentheses in a mixin call are optional, but optional parentheses are deprecated and will be required in a future release.
+再有版本和历史版本, mixin调用中的圆括号是可选的，但是可选圆括号是不推荐使用的，并且在将来的版本中必须使用。
 
 ```less
 .a(); 
-.a;  // currently works, but deprecated; don't use
+.a;  // 现在可以使用,但不推荐; 不要使用
 ```
 
-## Not Outputting the Mixin
+## 不输出Mixin
 
-If you want to create a mixin but you do not want that mixin to be in your CSS output, put parentheses after the mixin definition.
+如果你想创建一个mixin但是你不想mixin出现在CSS输出中，请在mixin定义后面加上圆括号。
 
 ```less
 .my-mixin {
@@ -49,7 +51,7 @@ If you want to create a mixin but you do not want that mixin to be in your CSS o
   .my-other-mixin();
 }
 ```
-outputs
+结果
 
 ```css
 .my-mixin {
@@ -61,11 +63,12 @@ outputs
 }
 ```
 
-## Selectors in Mixins
+## Mixins中的选择器
 
 Mixins can contain more than just properties, they can contain selectors too.
+Mixins不公可以包含属性，还可以包括选择器。
 
-For example:
+例如:
 
 ```less
 .my-hover-mixin() {
@@ -78,7 +81,7 @@ button {
 }
 ```
 
-Outputs
+结果
 
 ```css
 button:hover {
@@ -86,9 +89,9 @@ button:hover {
 }
 ```
 
-## Namespaces
+## 命名空间
 
-If you want to mixin properties inside a more complicated selector, you can stack up multiple id's or classes.
+如果想在一个很复杂的选择器使用mixin属性，可以将多个Id或类选择器叠加起来。
 
 ```less
 #outer() {
@@ -102,18 +105,18 @@ If you want to mixin properties inside a more complicated selector, you can stac
 }
 ```
 
-Both `>` and whitespace are optional
+`>`和空格是可选的
 
 ```less
-// all do the same thing
+// 下面相同功能
 #outer > .inner();
 #outer .inner();
 #outer.inner();
 ```
 
-Namespacing your mixins like reduces conflict with other library mixins or user mixins, but it can also be a way to "organize" groups of mixins.
+给你的mixins命名可以减少与其它的库或者用户mixins冲突，但是它也可以是一种“组织”mixins组的方法。
 
-Example:
+示例:
 
 ```less
 #my-library {
@@ -121,15 +124,15 @@ Example:
     color: black;
   }
 }
-// which can be used like this
+// 可以这么使用
 .class {
   #my-library.my-mixin();
 }
 ```
 
-## Guarded Namespaces
+## Guarded Namespaces(带条件的命名)
 
-If a namespace has a guard, mixins defined by it are used only if the guard condition returns true. A namespace guard is evaluated exactly the same way as a guard on mixin, so the following two mixins work the same way:
+如果mixins在带有条件的命名空间中定义，那么只有满足命名空间条件的情况才能正常使用。在命名空间上的条件和在mixins上的条件是等同的，所以下面两个mixins具有相同功能：
 
 ```less
 #namespace when (@mode = huge) {
@@ -141,8 +144,7 @@ If a namespace has a guard, mixins defined by it are used only if the guard cond
 }
 ```
 
-The `default` function is assumed to have the same value for all nested namespaces and mixin. Following mixin is never evaluated, one of its guards is guaranteed to be false:
-
+`default`函数是假设所有嵌套命名空间和mixin有相同的值。下面的mixin不会执行，其中一个条件不满足。
 ```less
 #sp_1 when (default()) {
   #sp_2 when (default()) {
@@ -151,11 +153,11 @@ The `default` function is assumed to have the same value for all nested namespac
 }
 ```
 
-## The `!important` keyword
+## `!important`关键字
 
-Use the `!important` keyword after mixin call to mark all properties inherited by it as `!important`:
+在mixin调用后面使用`!important`关键字，使所有属性做为`!important`继承它：
 
-Example:
+示例:
 
 ```less
 .foo (@bg: #f5f5f5, @color: #900) {
@@ -170,7 +172,7 @@ Example:
 }
 ```
 
-Results in:
+结果:
 
 ```css
 .unimportant {
