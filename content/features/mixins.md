@@ -1,7 +1,5 @@
-> "mix-in" properties from existing styles
-从已存在的样式中组合属性
+> 从已存在的样式中组合属性
 
-You can mix-in class selectors and id selectors, e.g.
 你可以组合类选择器和id选择器。例如
 
 ```less
