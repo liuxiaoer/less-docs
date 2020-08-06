@@ -4,9 +4,9 @@ published: false
 
 # strictMath
 
-> Only evaluate math when explicitly placed in parentheses
+> 只有当显示放在括号里面时才会计算
 
-## Example
+## 示例
 
 ```less
 (1 + 1) // => 2
