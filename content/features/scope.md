@@ -2,20 +2,20 @@
 published: false
 ---
 
-> How variables are evaluated
+> 如何计算变量
 
-## Tips & Tricks
+## 提示与技巧
 
 Credit: [less/less.js/issues/1472]({{ site.coderepo }}/issues/1472#issuecomment-22213697)
 
-Here is a trick for defining variables and keeping them in some private scope, preventing them from leaking to the global space.
+这是一个技巧，可以定义变量并将它们保持在某个私有作用域中，防止它们泄漏到全局空间。
 
 ```less
 & {
   // Vars
   @height: 100px;
   @width: 20px;
-  // Don't define any prop:value on this scope (as doing so will generate (wrong) output).
+  // 不要在这个作用域定义属性:值 (这样做将生成(错误)输出).
 
   .test {
     height: @height;
@@ -24,11 +24,12 @@ Here is a trick for defining variables and keeping them in some private scope, p
 }
 
 .rest {
-  height: @height; // Name error: variable @height is undefined
+  height: @height; // Name error: @height变量未定义
 }
 ```
 
-Here, `@height` and `@width` are only defined for the scope created by `& { ... }` You can also nest an scope inside a rule:
+`@height` 和 `@width`只对`& { ... }`的作用域有定义。你也可以在规则中嵌套作用域：
+
 
 ```less
 .some-module {
@@ -38,7 +39,7 @@ Here, `@height` and `@width` are only defined for the scope created by `& { ... 
   line-height: @height; // 200px
 
   & {
-    // Override original values
+    // 重写原来的值
     @height: 100px;
     @width: auto;
 
@@ -53,7 +54,7 @@ Here, `@height` and `@width` are only defined for the scope created by `& { ... 
   }
 
   & {
-    // Override original values
+    // 重写原来的值
     @height: 50px;
 
     .some-module__another-element {
