@@ -1,30 +1,30 @@
-> Assign a ruleset to a variable
+> 为变量分配规则集
 
-Released [v1.7.0]({{ less.master.url }}CHANGELOG.md)
+发布版本 [v1.7.0]({{ less.master.url }}CHANGELOG.md)
 
-A detached ruleset is a group of css properties, nested rulesets, media declarations or anything else stored in a variable. You can include it into a ruleset or another structure and all its properties are going to be copied there. You can also use it as a mixin argument and pass it around as any other variable.
+（Detached ruleset）分离的规则集是一组css属性，嵌套规则集，媒体声明或者存储在变量中的其它任何内容。你可以将其包含到规则集或其它结构中，并且它的所有属性将被拷贝到那里。你还可以用它做为mixin参数，并将其作为任何其它变量传递。
 
-Simple example:
+简单示例:
 ````less
 // declare detached ruleset
-@detached-ruleset: { background: red; }; // semi-colon is optional in 3.5.0+
+@detached-ruleset: { background: red; }; // 3.5.0+版本分号是可选的
 
-// use detached ruleset
+// 使用 detached ruleset
 .top {
     @detached-ruleset(); 
 }
 ````
 
-compiles into:
+输出:
 ````css
 .top {
   background: red;
 }
 ````
 
-Parentheses after a detached ruleset call are mandatory (except when followed by a [lookup value](#detached-rulesets-feature-property-variable-accessors)). The call `@detached-ruleset;` would not work.
+detached ruleset调用必须在后面加圆括号（除非后面跟有[lookup value](#detached-rulesets-feature-property-variable-accessors)）。调用`@detached-ruleset;`不起作用。
 
-It is useful when you want to define a mixin that abstracts out either wrapping a piece of code in a media query or a non-supported browser class name. The rulesets can be passed to mixin so that the mixin can wrap the content, e.g.
+如果你想定义一个可以抽象出在媒体查询中包含一段代码或者一个不受支持的浏览器类名的mixin时，它是很有用的。规则集可以被传递到mixin，所有mixin可以包装内容。
 
 ```less
 .desktop-and-old-ie(@rules) {
@@ -41,7 +41,7 @@ header {
 }
 ```
 
-Here the `desktop-and-old-ie` mixin defines the media query and root class so that you can use a mixin to wrap a piece of code. This will output
+这里`desktop-and-old-ie` mixin定义了一个媒体查询和根类，所以你可以用mixin包含一段代码。下面是输出
 
 ```css
 header {
@@ -57,7 +57,7 @@ html.lt-ie9 header {
 }
 ```
 
-A ruleset can be now assigned to a variable or passed in to a mixin and can contain the full set of Less features, e.g.
+现在规则集可以分配到变量上去或者传递到mixin，可以包含全套的Less功能。
 
 ```less
 @my-ruleset: {
@@ -67,7 +67,7 @@ A ruleset can be now assigned to a variable or passed in to a mixin and can cont
   };
 ```
 
-You can even take advantage of [media query bubbling](#features-overview-feature-media-query-bubbling-and-nested-media-queries), for instance
+你甚至可以使用[media query bubbling](#features-overview-feature-media-query-bubbling-and-nested-media-queries)，如下
 
 ```less
 @my-ruleset: {
@@ -82,7 +82,7 @@ You can even take advantage of [media query bubbling](#features-overview-feature
 }
 ```
 
-which will output
+输出
 
 ```css
 @media (orientation: portrait) and tv {
@@ -92,63 +92,64 @@ which will output
 }
 ```
 
-A detached ruleset call unlocks (returns) all its mixins into caller the same way as mixin calls do. However, it does **not** return variables.
+分离的规则集调用与mixin调用一样，将其所有mixin解锁(返回)到调用方。但是，它不返回变量。
 
-Returned mixin:
+返回mixin:
 ````less
-// detached ruleset with a mixin
+// 带有mixin的分离的规则集
 @detached-ruleset: { 
     .mixin() {
         color: blue;
     }
 };
-// call detached ruleset
+// 调用分离的规则集
 .caller {
     @detached-ruleset(); 
     .mixin();
 }
 ````
 
-Results in:
+结果:
 ````css
 .caller {
   color: blue;
 }
 ````
 
-Private variables:
+私有变量:
 ````less
 @detached-ruleset: { 
-    @color:blue; // this variable is private
+    @color:blue; // 这是私有变量
 };
 .caller {
-    color: @color; // syntax error
+    color: @color; // 语法错误
 }
 ````
 
-## Scoping
-A detached ruleset can use all variables and mixins accessible where it is *defined* and where it is *called*. Otherwise said, both definition and caller scopes are available to it. If both scopes contains the same variable or mixin, declaration scope value takes precedence. 
+## 作用域
+分离的规则集可以在定义所有的变量和mixins的地方使用它们。换言之，它对定义者和调用者作用域都可见。如果两个作用域都包含相同变量和mixin，优先使用声明作用域中的值。
 
-*Declaration scope* is the one where detached ruleset body is defined. Copying a detached ruleset from one variable into another cannot modify its scope. The ruleset does not gain access to new scopes just by being referenced there.
+*声明作用域*是指分离规则集主体范围。从一个变量复制分离规则集到另一个变量中会修改它的作用域。规则集不能通过在那里引用而获得新作用域的访问权。
 
-Lastly, a detached ruleset can gain access to scope by being unlocked (imported) into it.
+分离规则集可以解锁(导入)到其中获取作用域的访问权
 
-_Note: unlocking variables into scope via a called mixin is deprecated. Use [property / variable accessors](#detached-rulesets-feature-property-variable-accessors)._
+_提示: 通过调用mixin解锁变量到作用域已弃用。使用工[属性/变量访问器](#detached-rulesets-feature-property-variable-accessors)。_
 
-#### Definition and Caller Scope Visibility
-A detached ruleset sees the caller's variables and mixins:
+#### 定义作用域和调用作用域的可见性
+
+分离规则集可以访问调用者作用域的变量和mixins:
 
 ````less
 @detached-ruleset: {
-  caller-variable: @caller-variable; // variable is undefined here
-  .caller-mixin(); // mixin is undefined here
+  caller-variable: @caller-variable; // 变量还未定义
+  .caller-mixin(); // mixin还未定义
 };
 
 selector {
-  // use detached ruleset
+  // 使用分离规则集
   @detached-ruleset(); 
 
-  // define variable and mixin needed inside the detached ruleset
+  // 需要在分离规则集中定义变量和mixin
   @caller-variable: value;
   .caller-mixin() {
     variable: declaration;
@@ -156,7 +157,7 @@ selector {
 }
 ````
 
-compiles into:
+编译成:
 ````css
 selector {
   caller-variable: value;
@@ -164,37 +165,39 @@ selector {
 }
 ````
 
-Variable and mixins accessible from definition win over those available in the caller:
+从定义访问变量和mixin胜过调用程序中可用的变量和mixin：
+
 ````less
 @variable: global;
 @detached-ruleset: {
-  // will use global variable, because it is accessible
-  // from detached-ruleset definition
+  // 将会使用全局的变量，因为分离规则集定义中是可以访问它的。
   variable: @variable; 
 };
 
 selector {
   @detached-ruleset();
-  @variable: value; // variable defined in caller - will be ignored
+  @variable: value; // 调用者作用域中定义 - 被忽略
 }
 ````
 
-compiles into:
+编译成:
 ````css
 selector {
   variable: global;
 }
 ````
 
-#### Referencing *Won't* Modify Detached Ruleset Scope
-A ruleset does not gain access to new scopes just by being referenced there:
+#### 引用 *不要* 修改分离规则集作用域
+
+规则集无法仅仅通过被引用来获得对新的作用域的访问权：
+
 ````less
 @detached-1: { scope-detached: @one @two; };
 .one {
   @one: visible;
   .two {
-    @detached-2: @detached-1; // copying/renaming ruleset 
-    @two: visible; // ruleset can not see this variable
+    @detached-2: @detached-1; // 复制/重命名 规则集
+    @two: visible; //规则集无法访问此变量
   }
 }
 
@@ -204,104 +207,34 @@ A ruleset does not gain access to new scopes just by being referenced there:
 }
 ````
 
-throws an error:
+抛异常:
 ````
 ERROR 1:32 The variable "@one" was not declared.
 ````
 
-#### Unlocking *Will* Modify Detached Ruleset Scope
-A detached ruleset gains access by being unlocked (imported) inside a scope:
+#### 解锁 *将* 修改分离规则集的作用域
+规则集通过解锁(导入)在作用域中获取访问权。
 ````less
 #space {
   .importer-1() {
-    @detached: { scope-detached: @variable; }; // define detached ruleset
+    @detached: { scope-detached: @variable; }; // 定义分离规则集
   }
 }
 
 .importer-2() {
-  @variable: value; // unlocked detached ruleset CAN see this variable
-  #space > .importer-1(); // unlock/import detached ruleset
+  @variable: value; // 解锁的分享规则集可以访问此变量
+  #space > .importer-1(); // 解锁/导入分离规则集
 }
 
 .use-place {
-  .importer-2(); // unlock/import detached ruleset second time
+  .importer-2(); // 第二次解锁/导入分离规则集
    @detached();
 }
 ````
 
-compiles into:
+编译成:
 ````css
 .use-place {
   scope-detached: value;
 }
 ````
-
-
-## Property / variable accessors
-#### (Lookup values)
-
-_Released [v3.5.0]({{ less.master.url }}CHANGELOG.md)_
-
-Starting in Less 3.5, you can use property/variable accessors (also called "lookups") to select a value from variable (detached) rulesets.
-
-```less
-@config: {
-  option1: true;
-  option2: false;
-}
-
-.mixin() when (@config[option1] = true) {
-  selected: value;
-}
-
-.box {
-  .mixin();
-}
-```
-Outputs:
-```css
-.box {
-  selected: value;
-}
-```
-
-If what is returned from a lookup is another detached ruleset, you can use a second lookup to get that value.
-
-```less
-@config: {
-  @colors: {
-    primary: blue;
-  }
-}
-
-.box {
-  color: @config[@colors][primary];
-}
-```
-
-#### Variable variables in lookups
-
-The lookup value that is returned can itself be variable. As in, you can write:
-
-```less
-@config: {
-  @dark: {
-    primary: darkblue;
-  }
-  @light: {
-    primary: lightblue;
-  }
-}
-
-.box {
-  @lookup: dark;
-  color: @config[@@lookup][primary];
-}
-```
-This will output:
-
-```less
-.box {
-  color: darkblue;
-}
-```
