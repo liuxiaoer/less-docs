@@ -1,8 +1,9 @@
-Guards are useful when you want to match on _expressions_, as opposed to simple values or arity. If you are familiar with functional programming, you have probably encountered them already.
+与简单的值和数量相反，当你想要在表达式上匹配时，Guards是很有用的。如果你很熟悉函数式编程，你可以已经遇到过它们。
 
-In trying to stay as close as possible to the declarative nature of CSS, Less has opted to implement conditional execution via **guarded mixins** instead of `if`/`else` statements, in the vein of `@media` query feature specifications.
+试图保持与定义原生CSS相近，Less选择通过**guarded mixins**代替`if`/`else`,实现有条件的执行,就像在`@media`查询特性规范
 
-Let's start with an example:
+
+以示例开始学习:
 
 ```less
 .mixin(@a) when (lightness(@a) >= 50%) {
@@ -16,14 +17,14 @@ Let's start with an example:
 }
 ```
 
-The key is the `when` keyword, which introduces a guard sequence (here with only one guard). Now if we run the following code:
+key是`when`的关键字，它引入了一个guard序列（这是只有一个guard）.现在如果我们运行下面的代码：
 
 ```less
 .class1 { .mixin(#ddd) }
 .class2 { .mixin(#555) }
 ```
 
-Here's what we'll get:
+这是我们得到的结果：
 
 ```css
 .class1 {
@@ -36,16 +37,16 @@ Here's what we'll get:
 }
 ```
 
-#### Guard Comparison Operators
+#### Guard比较运算符
 
-The full list of comparison operators usable in guards are: `>`, `>=`, `=`, `=<`, `<`. Additionally, the keyword `true` is the only truthy value, making these two mixins equivalent:
+这是guard可以使用的所有比较运算符：`>`, `>=`, `=`, `=<`, `<`。另外，true关键字是唯一个使用两个mixin等价的真值。
 
 ```less
 .truth(@a) when (@a) { ... }
 .truth(@a) when (@a = true) { ... }
 ```
 
-Any value other than the keyword `true` is falsy:
+除了`true`任何值都是fasle:
 
 ```less
 .class {
@@ -53,7 +54,7 @@ Any value other than the keyword `true` is falsy:
 }
 ```
 
-Note that you can also compare arguments with each other, or with non-arguments:
+注意：你也可以相互比较参数，也可以与非参数比较：
 
 ```less
 @media: mobile;
@@ -65,38 +66,38 @@ Note that you can also compare arguments with each other, or with non-arguments:
 .max(@a; @b) when (@a < @b) { width: @b }
 ```
 
-#### Guard Logical Operators
+#### Guard逻辑运算符
 
-You can use logical operators with guards. The syntax is based on CSS media queries.
+你可以使用逻辑运算符。语法基于CSS的媒体查询。
 
-Use the `and` keyword to combine guards:
+结合guard使用`and`关键字：
 
 ```less
 .mixin(@a) when (isnumber(@a)) and (@a > 0) { ... }
 ```
 
-You can emulate the *or* operator by separating guards with a comma `,`. If any of the guards evaluate to true, it's considered a match:
+你可以使用逗号`,`分隔guards来模仿*or*运算符。如果任意一个guard结果为true，则视为匹配：
 
 ```less
 .mixin(@a) when (@a > 10), (@a < -10) { ... }
 ```
 
-Use the `not` keyword to negate conditions:
+使用`not`关键字来否定条件：
 
 ```less
 .mixin(@b) when not (@b > 0) { ... }
 ```
 
-#### Type Checking Functions
+#### 类型检查函数
 
-Lastly, if you want to match mixins based on value type, you can use the `is` functions:
+最后，如果你想通过值的类型匹配mixin，你可以使用下面的is函数：
 
 ```less
 .mixin(@a; @b: 0) when (isnumber(@b)) { ... }
 .mixin(@a; @b: black) when (iscolor(@b)) { ... }
 ```
 
-Here are the basic type checking functions:
+下面是基本的类型检查函数：
 
 * `iscolor`
 * `isnumber`
@@ -104,7 +105,7 @@ Here are the basic type checking functions:
 * `iskeyword`
 * `isurl`
 
-If you want to check if a value is in a specific unit in addition to being a number, you may use one of:
+如果你想检查一个值除了是一个数字之外，是否还使用了特定的单位，你可以使用下面的一个：
 
 * `ispixel`
 * `ispercentage`
