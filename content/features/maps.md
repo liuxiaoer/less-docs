@@ -1,8 +1,8 @@
-Released [v3.5.0]({{ less.master.url }}CHANGELOG.md)
+发布版本 [v3.5.0]({{ less.master.url }}CHANGELOG.md)
 
-> Use rulesets and mixins as maps of values
+> 用规则集和mixin做为值的映射
 
-By combining namespacing with the lookup `[]` syntax, you can turn your rulesets / mixins into maps.
+通过将命名空间与查找`[]`语法相结合，你可以装饰规则集/mixin转换为映射。
 
 ```less
 @sizes: {
@@ -19,7 +19,7 @@ By combining namespacing with the lookup `[]` syntax, you can turn your rulesets
   }
 }
 ```
-Outputs:
+输出:
 ```css
 .navbar {
   display: block;
@@ -31,7 +31,7 @@ Outputs:
 }
 ```
 
-Mixins are a little more versatile as maps because of namespacing and the ability to overload mixins.
+mixin由于名称空间和重载mixin的能力，所以作为映射，mixin的用途更广一些。
 
 ```less
 #library() {
@@ -50,7 +50,7 @@ Mixins are a little more versatile as maps because of namespacing and the abilit
   border-color: #library.colors[secondary];
 }
 ```
-Outputs:
+结果:
 ```css
 .button {
   color: grey;
@@ -58,7 +58,7 @@ Outputs:
 }
 ```
 
-You can also make this easier by [aliasing mixins](#mixins-feature-mixin-aliasing-feature).  That is:
+你也可以通过使用[aliasing mixins](#mixins-feature-mixin-aliasing-feature)让它更简单。
 
 ```less
 .button {
@@ -68,7 +68,7 @@ You can also make this easier by [aliasing mixins](#mixins-feature-mixin-aliasin
 }
 ```
 
-Note, if a lookup value produces another ruleset, you can append a second `[]` lookup, as in:
+如果查找值得到规则集，你可以在后面使用第二个`[]`：
 
 ```less
 @config: {
@@ -84,13 +84,14 @@ Note, if a lookup value produces another ruleset, you can append a second `[]` l
 }
 ```
 
-In this way, rulesets and variable calls can emulate a type of "namespacing", similar to mixins.
+使用这方法，规则集和变量调用可以模拟一种与mixin相似的”命名空间“类型。
 
-As far as whether to use mixins or rulesets assigned to variables as maps, it's up to you. You may want to replace entire maps by re-declaring a variable assigned to a rulset. Or you may want to "merge" individual key/value pairs, in which case mixins as maps might be more appropriate.
+是否使用mixin或规则集分配给变量作为映射，由你决定。你可能想用重新声明规则集分配给变量替换整个map。或者你可能想“合并”个人的键值对。这各情况mixin作为映射可能更合适。
 
-### Using variable variables in lookups
 
-One important thing to notice is that the value in `[@lookup]` is the key (variable) name `@lookup`, and is not evaluated as a variable. If you want the key name itself to be variable, you can use the `@@variable` syntax.
+### 在查找中使用变量的变量
+
+重要提示：在`[@lookup]`的值是`@lookup`的名称，不作为变量计算。如果你想键名成为变量，你可以使用`@@variable`语法。
 
 E.g.
 ```less
@@ -104,7 +105,7 @@ E.g.
   treat: .foods[@@key-to-lookup];
 }
 ```
-This would output:
+结果:
 ```css
 .lunch {
   treat: ice cream;
