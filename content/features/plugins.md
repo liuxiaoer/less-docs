@@ -1,14 +1,15 @@
-Released [v2.5.0]({{ less.master.url }}CHANGELOG.md)
+发布版本 [v2.5.0]({{ less.master.url }}CHANGELOG.md)
 
-> Import JavaScript plugins to add Less.js functions and features
+> 导入JavaScript插件以添加Less.js的功能和特性
 
-## Writing your first plugin
+## 第一个插件
 
-Using a `@plugin` at-rule is similar to using an `@import` for your `.less` files.
+使用`@plugin`与在`.less`文件中使用`@import`相似。
 ```less
-@plugin "my-plugin";  // automatically appends .js if no extension
+@plugin "my-plugin";  // 如果没有扩展名，自动添加.js
 ```
-Since Less plugins are evaluated within the Less scope, the plugin definition can be quite simple.
+由于Less插件是在Less作用域中计算的，所以插件定义可以很简单。
+
 ```js
 registerPlugin({
     install: function(less, pluginManager, functions) {
@@ -18,7 +19,7 @@ registerPlugin({
     }
 })
 ```
-or you can use `module.exports` (shimmed to work in browser as well as Node.js).
+你可以使用`module.exports`（填充以在浏览器以及Node.js中运行）
 ```js
 module.exports = {
     install: function(less, pluginManager, functions) {
@@ -28,9 +29,9 @@ module.exports = {
     }
 };
 ```
-Note that other Node.js CommonJS conventions, like `require()` are not available in the browser. Keep this in mind when writing cross-platform plugins.
+注意其它Node.js CommonJS约定，就像`require()`不能在浏览器中使用。当写跨平台的件时记住这些。
 
-What can you do with a plugin? A lot, but let's start with the basics. We'll focus first on what you might put inside the `install` function. Let's say you write this:
+插件可以干什么？很多，但是我们先看看基本的。我们将先把重点放在`install`函数中。假设你写了这个：
 
 ```js
 // my-plugin.js
@@ -41,32 +42,36 @@ install: function(less, pluginManager, functions) {
 }
 // etc
 ```
-Congratulations! You've written a Less plugin! 
 
-If you were to use this in your stylesheet:
+恭喜你！你已经写了一个Less插件！
+
+
+如果在样式表中使用这个插件：
 ```less
 @plugin "my-plugin";
 .show-me-pi {
   value: pi();
 }
 ```
-You would get:
+结果:
 ```less
 .show-me-pi {
   value: 3.141592653589793;
 }
 ```
-However, you would need to return a proper Less node if you wanted to, say, multiply that against other values or do other Less operations. Otherwise the output in your stylesheet is plain text (which may be fine for your purposes).
+但是，你想将其与其它值相乘或其它Less操作，你需要返回一个适当的Less节点。否则输出到样式表中的是纯文本(对你的目的可能很好)。
 
-Meaning, this is more correct:
+意思是，这更正确:
+
 ```js
 functions.add('pi', function() {
     return new tree.Dimension(Math.PI);
 });
 ```
-_Note: A dimension is a number with or without a unit, like "10px", which would be `less.Dimension(10, "px")`. For a list of units, see the [Less API](TODO)._
 
-Now you can use your function in operations.
+_提示：维度是一个带或者不带单位的数字，`less.Dimension(10, "px")`得到“10px"。查看[Less API](TODO)获取单位列表。_
+
+现在你可以在操作中使用你的函数。
 ```less
 @plugin "my-plugin";
 .show-me-pi {
@@ -74,14 +79,13 @@ Now you can use your function in operations.
 }
 ```
 
-You may have noticed that there are available globals for your plugin file, namely a function registry (`functions` object), and the `less` object. These are there for convenience.
+你可能已经注意到你的插件有可用的全局参数，即函数注册表(`functions`对象)和`less`对象。这些是为了方便。
 
+## 插件作用域
 
-## Plugin Scope
+在函数前面加上`@plugin`规则遵循Less作用域规则。这对于那些希望添加功能面不引入命名冲突的库作者来说，这非常适合。
 
-Functions added by a `@plugin` at-rule adheres to Less scoping rules. This is great for Less library authors that want to add functionality without introducing naming conflicts.
-
-For instance, say you have 2 plugins from two third-party libraries that both have a function named "foo".
+例如，来自两个第三方库的两个插件都有一个名称是“foo”的函数。
 ```js
 // lib1.js
 // ...
@@ -97,7 +101,9 @@ For instance, say you have 2 plugins from two third-party libraries that both ha
     });
 // ...
 ```
-That's ok! You can choose which library's function creates which output.
+
+没关系！你可以选择哪个库的函数创建哪个输出。
+
 ```less
 .el-1 {
     @plugin "lib1";
@@ -108,7 +114,7 @@ That's ok! You can choose which library's function creates which output.
     value: foo();
 }
 ```
-This will produce:
+输出:
 ```less
 .el-1 {
     value: foo;
@@ -118,7 +124,8 @@ This will produce:
 }
 ```
 
-For plugin authors sharing their plugins, that means you can also effectively make private functions by placing them in a particular scope. As in, this will cause an error:
+对于分享插件的作者来说，这意为着你也可以有效的在特定作用域创建私有函数代替他们。
+
 ```less
 .el {
     @plugin "lib1";
@@ -126,20 +133,22 @@ For plugin authors sharing their plugins, that means you can also effectively ma
 @value: foo();
 ```
 
-As of Less 3.0, functions can return any kind of Node type, and can be called at any level.
+自Less 3.0起，函数可以返回任意Node类型，可以在任何级别调用。
 
-Meaning, this would throw an error in 2.x, as functions had to be part of the value of a property or variable assignment:
+也就是说下面的代码在2.x中将抛出错误，函数必须是属性值的一部分或变量分配。
+
 ```less
 .block {
     color: blue;
     my-function-rules();
 }
 ```
-In 3.x, that's no longer the case, and functions can return At-Rules, Rulesets, any other Less node, strings, and numbers (the latter two are converted to Anonymous nodes).
+在3.x中，现在不是这样了，函数可以返回@规则，规则集，其它Less节点，字符串和数字(最后两个被转换成匿名节点)。
 
-## Null Functions
+## 空函数
 
-There are times when you may want to call a function, but you don't want anything output (such as storing a value for later use). In that case, you just need to return `false` from the function.
+有时你可能想调用函数，但是你不想输出任何东西（比如为后面使用而存储一个值）。在那种情况，你仅仅需要在函数中返回`false`。
+
 ```js
 var collection = [];
 
@@ -153,7 +162,8 @@ functions.add('store', function(val) {
 @var: 32;
 store(@var);
 ```
-Later you could do something like:
+
+最后你可以像这样做：
 ```js
 functions.add('retrieve', function(val) {
     return new tree.Value(collection);
@@ -166,48 +176,44 @@ functions.add('retrieve', function(val) {
 }
 ```
 
-## The Less.js Plugin Object
+## Less.js插件对象
 
-A Less.js plugin should export an object that has one or more of these properties.
+Less.js插件需要导出一个含有一个或多个这些属性的对象。
 ```js
 {
-    /* Called immediately after the plugin is 
-     * first imported, only once. */
+    /* 插件第一次导入时立即被调用，只调用一次。 */
     install: function(less, pluginManager, functions) { },
 
-    /* Called for each instance of your @plugin. */
+    /* 每次使用@plugin都会被调用 */
     use: function(context) { },
 
-    /* Called for each instance of your @plugin, 
-     * when rules are being evaluated.
-     * It's just later in the evaluation lifecycle */
+    /* 每次使用@plugin都会被调用，当规则被计算。只是在计算的后期 */
     eval: function(context) { },
 
-    /* Passes an arbitrary string to your plugin 
-     * e.g. @plugin (args) "file";
-     * This string is not parsed for you, 
-     * so it can contain (almost) anything */
+    /* 给插件传递任意字符串
+     * 例如 @plugin (args) "file";
+     * 这个字符串没有解析，所有它可以包含(几乎)任何东西
+     */
     setOptions: function(argumentString) { },
 
-    /* Set a minimum Less compatibility string
-     * You can also use an array, as in [3, 0] */
+    /* 设置一个Less最小兼容的字符串，你也可以使用数组，如 [3, 0] */
     minVersion: ['3.0'],
 
-    /* Used for lessc only, to explain 
-     * options in a Terminal */
+    /* 只能使用lessc在命令行解释选项 */
     printUsage: function() { },
 
 }
 ```
-The PluginManager instance for the `install()` function provides methods for adding visitors, file managers, and post-processors.
+`install()`函数的插件管理器实例提供添加访问者，文件管理器和后处理程序的方法。
 
-Here are some example repos showing the different plugin types. <!-- TODO: updated examples -->
+这里是一些不同插件类型的示例： <!-- TODO: 更新示例 -->
  - post-processor: https://github.com/less/less-plugin-clean-css
  - visitor: https://github.com/less/less-plugin-inline-urls
  - file-manager: https://github.com/less/less-plugin-npm-import
 
-## Pre-Loaded Plugins
+## 预加载插件
 
 While a `@plugin` call works well for most scenarios, there are times when you might want to load a plugin before parsing starts.
+大部分行情使用`@plugin`就可以了，除了有时你想在解析之前加载插件。
 
-See: [Pre-Loaded Plugins](../usage/#plugins) in the "Using Less.js" section for how to do that.
+见: [Pre-Loaded Plugins](../usage/#plugins) 在 "Using Less.js" 章节介绍如何使用.
